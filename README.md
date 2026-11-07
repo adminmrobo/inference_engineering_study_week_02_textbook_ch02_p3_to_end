@@ -17,9 +17,27 @@
 | 자료 | 무엇 | 열기 |
 |---|---|---|
 | 읽기용 해설 | 아홉 걸음 인터랙티브 해설 (블로그) | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end/ |
-| 본 발표 슬라이드 | 본편 42장 + 부록 17장, 공장 비유·GPU 10종 대시보드 | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/ |
-| 쉬운 가이드 | 도입 12장 + 핵심만 쉽게 13장(흰 배경, 초보자용) | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/easy_guide.html |
+| 본 발표 슬라이드 | 본편 46장 + 부록 17장, 공장 비유·GPU 10종 대시보드 | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/ |
+| 쉬운 가이드 | 도입 12장 + 핵심만 쉽게 17장(흰 배경, 초보자용) | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/easy_guide.html |
 | "캐릭터 춤춰" GPU 시뮬레이터 | 춤 영상이 만들어지는 동안 GPU의 열·전력·시간·데드락·병목을 직접 일으켜 보는 4쪽 시뮬레이터, 연구실 캐릭터 튜토리얼 13단계 | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/gpu_dance_simulator.html |
+
+## "캐릭터 춤춰" GPU 시뮬레이터 미리보기
+
+생성형 AI에 "캐릭터 춤춰"라고 했을 때 GPU 안에서 무슨 일이 일어나는지 값을 직접 바꾸며 보는 실험실입니다. ▶ https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/gpu_dance_simulator.html
+
+![춤 이벤트 6칸: 프롬프트부터 완성 영상까지](images/sim_dance.webp)
+**① 춤 이벤트 6칸.** 프롬프트 → 텍스트 인코더 → 동작 생성(막대 인형) → 포즈 맵(관절 13개) → 포즈 기반 생성(잡음이 걷힘) → 영상. 고른 GPU의 속도대로 칸이 하나씩 켜집니다.
+
+![GPU 실물과 구조도](images/sim_gpu.webp)
+**② GPU 실물 · 구조도.** Quadro RTX 5000이 14B 모델을 돌리는 중. SM 48칸이 열 색으로 깜박이고, VRAM이 모자라 24.7GB를 시스템 RAM에서 PCIe로 실어 옵니다. 실행 중인 커널, 병목 꼬리표, 온도·팬·전력이 함께 보입니다.
+
+![조절판과 계기판](images/sim_ctl.webp)
+**③ 조절판 · 계기판.** GPU 10종, 모델, 정밀도, 해상도, 단계, FlashAttention, 오프로딩, 동시 요청, 냉각을 바꾸면 전력·온도·VRAM·시간이 다시 계산됩니다.
+
+![연구실 튜토리얼](images/sim_tut.webp)
+**④ 연구실 튜토리얼.** 박사·조수·초파리 연구원·주판봇이 13단계로 안내합니다. "실험 1"을 누르면 RTX 5070에서 VRAM 부족(OOM)이 일어나 5번 칸부터 멈춥니다.
+
+해 볼 수 있는 사건: VRAM 부족(OOM) · 데드락 · 열 제한(83°C, 클럭 −15%) · 봇 응답 시간 초과 · 처방(FlashAttention·FP8·적은 단계) · GPU 10종 비교 · 도전 모드("어쭈!" 360p → 4K)
 
 ## 이 페이지는
 
@@ -33,7 +51,7 @@ AI가 느릴 때 무엇을 고쳐야 하는지 아홉 단계로 나누어 설명
 |---|---|---|---|
 | ① | GPU 주방 둘러보기 | 2.4.1 | 계산 성능(FLOPS)과 메모리 대역폭, 두 자원이 있다 |
 | ② | 잡음에서 그림으로 | 2.3, 그림 2.10 | 이미지는 잡음을 30–50번 고쳐 써서 만든다 |
-| ③ | 잠재 공간과 두 번 계산 | 2.3 | 작게(128×128) 그리고, 단계마다 순전파 두 번 |
+| ③ | 잠재 공간과 두 번 계산 | 2.3 | 작게(128×128) 그리고, 단계마다 순전파 두 번. 디노이저 학습을 아주 쉽게: 정답을 아는 퀴즈, 칸 4개 손실 계산, 고르기(−log) vs 맞히기(차이²), 경사 하강 |
 | ④ | 단계를 줄이면 | 2.3.2 | 퓨스텝 모델: 8단계 이하, 80–90% 빨라짐 |
 | ⑤ | 영상은 시간까지 | 2.3.3 | 영상은 파라미터 3–5배, 잠재 정보 10–100배 |
 | ⑥ | 어디가 막혔나 | 2.4.1, 그림 2.12–2.13 | 루프라인: 산술 강도 < ops:byte(H100 ≈ 295)면 메모리 병목 |

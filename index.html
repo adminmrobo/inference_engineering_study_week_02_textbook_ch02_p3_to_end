@@ -8,7 +8,7 @@
 <meta name="description" content="Inference Engineering 2장(2.3–2.5)을 박사·조수·초파리 연구원·주판봇이 진행하는 인터랙티브 해설: 이미지·영상 생성 추론, 연산과 메모리 병목, 루프라인, 어텐션 산술 강도, 어텐션 최적화.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="병목을 찾아라 · 인퍼런스러닝 3주차">
-<meta property="og:description" content="『Inference Engineering』 2장 2.3–2.5 인터랙티브 해설: 이미지·영상 생성 추론, 루프라인, 어텐션 산술 강도, 어텐션 최적화">
+<meta property="og:description" content="『Inference Engineering』 2장 2.3–2.5 인터랙티브 해설: 이미지·영상 생성 추론, 디노이저 학습과 손실, 루프라인, 어텐션 산술 강도, 어텐션 최적화">
 <meta property="og:url" content="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end/">
 <meta property="og:image" content="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end/images/og_03.webp">
 <meta name="twitter:card" content="summary_large_image">
@@ -245,6 +245,12 @@ footer .tb{font-size:13.5px}
 .key b.k{color:var(--gfp);white-space:nowrap;font-size:13px;padding-top:2px}
 .key p{margin:0}
 .easy{color:var(--muted);font-size:15px;margin:.2em 0 .8em}
+.lq{margin:.3em 0 .5em;padding-left:1.3em}.lq li{margin:.2em 0}
+.lmtab{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr));gap:4px;font-size:13.5px;font-variant-numeric:tabular-nums;margin:6px 0}
+.lmtab span{background:var(--panel2);border-radius:6px;padding:3px 4px;text-align:center}.lmtab .h{background:none;color:var(--muted);text-align:left}
+.lmtab .g{color:var(--amber)}.lmtab .p{color:var(--info)}.lmtab .s{color:var(--eye);font-weight:700}
+.lmsl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px;font-size:13px;color:var(--muted)}.lmsl label{display:flex;flex-direction:column}.lmsl input{width:100%;max-width:none}
+.lmout{font-weight:700;color:var(--eye);margin:.4em 0;font-variant-numeric:tabular-nums}
 .walk{background:var(--panel2);border-radius:12px;padding:12px 14px;margin:10px 0}
 .walk ol{margin:.3em 0;padding-left:1.4em}
 .walk li{margin:.25em 0;opacity:.35;transition:opacity .3s}
@@ -263,7 +269,7 @@ footer .tb{font-size:13.5px}
 <nav class="top" aria-label="섹션 바로가기"><div class="wrap">
   <a class="logo" href="#top">인퍼런스<b>러닝</b> · 3주차</a>
   <div class="links">
-    <a href="#kit">자료 모음</a><a href="#map">큰 그림</a><a href="#lv1">① 주방</a><a href="#lv2">② 잡음→그림</a><a href="#lv3">③ 잠재 공간</a><a href="#lv4">④ 퓨스텝</a><a href="#lv5">⑤ 영상</a><a href="#lv6">⑥ 루프라인</a><a href="#lv7">⑦ 계산표</a><a href="#lv8">⑧ 동선</a><a href="#lv9">⑨ 레시피</a><a href="#duel-sec">대결</a><a href="#sum">정리</a><a href="#kg">색인</a><a href="#export">꾸러미</a>
+    <a href="#kit">자료 모음</a><a href="#sim">시뮬레이터</a><a href="#map">큰 그림</a><a href="#lv1">① 주방</a><a href="#lv2">② 잡음→그림</a><a href="#lv3">③ 잠재 공간</a><a href="#lv4">④ 퓨스텝</a><a href="#lv5">⑤ 영상</a><a href="#lv6">⑥ 루프라인</a><a href="#lv7">⑦ 계산표</a><a href="#lv8">⑧ 동선</a><a href="#lv9">⑨ 레시피</a><a href="#duel-sec">대결</a><a href="#sum">정리</a><a href="#kg">색인</a><a href="#export">꾸러미</a>
   </div>
 </div></nav>
 
@@ -350,10 +356,45 @@ footer .tb{font-size:13.5px}
   <p class="sub">같은 범위(『Inference Engineering』 2.3–2.5)를 네 가지로 만들었습니다. 읽고, 발표하고, 쉽게 훑고, 직접 돌려 보세요.</p>
   <div class="grid4">
     <div class="card"><h4 style="color:var(--gfp)">읽기용 해설</h4><p>지금 이 페이지. 아홉 걸음으로 병목을 찾습니다.</p><p class="tiny" style="color:var(--muted)">지금 보는 중</p></div>
-    <div class="card"><h4 style="color:var(--c-doc)">본 발표 슬라이드</h4><p>본편 42장 + 부록 17장. 공장 비유와 GPU 10종 대시보드.</p><p><a href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/" target="_blank" rel="noopener">슬라이드 열기 →</a></p></div>
-    <div class="card"><h4 style="color:var(--c-asst)">쉬운 가이드</h4><p>도입 12장 + 핵심만 쉽게 13장. 흰 배경, 초보자용.</p><p><a href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/easy_guide.html" target="_blank" rel="noopener">가이드 열기 →</a></p></div>
-    <div class="card"><h4 style="color:var(--c-robo)">"캐릭터 춤춰" GPU 시뮬레이터</h4><p>춤 영상이 만들어지는 동안 GPU의 열·전력·병목·데드락을 직접 일으켜 봅니다. 튜토리얼 13단계.</p><p><a href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/gpu_dance_simulator.html" target="_blank" rel="noopener">시뮬레이터 열기 →</a></p></div>
+    <div class="card"><h4 style="color:var(--c-doc)">본 발표 슬라이드</h4><p>본편 46장 + 부록 17장. 공장 비유와 GPU 10종 대시보드.</p><p><a href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/" target="_blank" rel="noopener">슬라이드 열기 →</a></p></div>
+    <div class="card"><h4 style="color:var(--c-asst)">쉬운 가이드</h4><p>도입 12장 + 핵심만 쉽게 17장. 흰 배경, 초보자용.</p><p><a href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/easy_guide.html" target="_blank" rel="noopener">가이드 열기 →</a></p></div>
+    <div class="card"><h4 style="color:var(--c-robo)">"캐릭터 춤춰" GPU 시뮬레이터</h4><p>춤 영상이 만들어지는 동안 GPU의 열·전력·병목·데드락을 직접 일으켜 봅니다. <a href="#sim">아래 소개 ↓</a></p><p><a href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/gpu_dance_simulator.html" target="_blank" rel="noopener">시뮬레이터 열기 →</a></p></div>
   </div>
+</div>
+</section>
+
+<section class="level" id="sim">
+<style>
+#sim .shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0}
+#sim figure{margin:0;background:var(--panel);border:1px solid var(--rule);border-radius:14px;overflow:hidden;min-width:0}
+#sim figure.wide{grid-column:1/-1}
+#sim figure img{display:block;width:100%;height:auto;background:#fff}
+#sim figcaption{padding:10px 14px;font-size:14.5px;color:var(--text);line-height:1.6}
+#sim figcaption b{color:var(--c-robo)}
+#sim .exp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0 14px}
+#sim .exp div{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px 12px;font-size:14px}
+#sim .exp b{display:block;margin-bottom:2px}
+#sim .go{display:inline-block;background:var(--c-robo);color:#0d0e16;font-weight:700;border-radius:999px;padding:9px 20px;text-decoration:none}
+@media (max-width:760px){#sim .shots,#sim .exp{grid-template-columns:minmax(0,1fr)}}
+</style>
+<div class="wrap">
+  <h2>"캐릭터 춤춰" GPU 시뮬레이터</h2>
+  <p class="sub">생성형 AI에 "캐릭터 춤춰"라고 했을 때 GPU 안에서 무슨 일이 일어나는지, 값을 직접 바꾸며 보는 실험실입니다. 이 페이지에서 배운 <b>두 자원(①)</b>, <b>디노이징(②~⑤)</b>, <b>루프라인 병목(⑥)</b>, <b>FlashAttention(⑧)</b>을 한 화면에서 돌려 봅니다.</p>
+  <div class="shots">
+    <figure class="wide"><img src="images/sim_dance.webp" alt="프롬프트, 텍스트 인코더, 막대 인형 동작, 관절 포즈 맵, 잡음이 걷힌 조수 그림, 완성 영상의 여섯 칸" loading="lazy" width="1600" height="577"><figcaption><b>① 춤 이벤트 6칸</b> — 프롬프트 → 텍스트 인코더 → 동작 생성(막대 인형) → 포즈 맵(관절 13개) → 포즈 기반 생성(잡음이 걷힘) → 영상. 실행하면 고른 GPU의 속도대로 칸이 하나씩 켜지고, 해상도를 올리면 그림이 또렷해집니다.</figcaption></figure>
+    <figure class="wide"><img src="images/sim_gpu.webp" alt="달아오른 Quadro RTX 5000 카드와, SM 48칸·L2 캐시·GDDR6 칩·PCIe를 그린 구조도" loading="lazy" width="1600" height="826"><figcaption><b>② GPU 실물 · 구조도</b> — Quadro RTX 5000이 14B 모델을 돌리는 중. SM 48칸이 열 색으로 깜박이고, VRAM이 모자라 24.7GB를 바깥 창고(시스템 RAM)에서 PCIe로 실어 옵니다. 지금 도는 커널 이름과 병목 꼬리표, 86°C까지 오른 온도와 팬·전력이 함께 보입니다.</figcaption></figure>
+    <figure><img src="images/sim_ctl.webp" alt="GPU·모델·해상도·FlashAttention·오프로딩 조절판과 전력·온도 계기판, 시간에 따른 전력·온도 그래프" loading="lazy" width="1600" height="1161"><figcaption><b>③ 조절판 · 계기판</b> — GPU 10종, 모델, 정밀도, 해상도, 단계, FlashAttention, 오프로딩, 동시 요청, 냉각을 바꾸면 전력·온도·VRAM·시간이 다시 계산됩니다. 이 설정은 2시간 55분, 642Wh(약 96원).</figcaption></figure>
+    <figure><img src="images/sim_tut.webp" alt="초파리 연구원이 VRAM 부족 실험을 안내하는 튜토리얼과 5번 칸부터 멈춘 춤 이벤트" loading="lazy" width="1600" height="1161"><figcaption><b>④ 연구실 튜토리얼</b> — 박사·조수·초파리 연구원·주판봇이 13단계로 안내합니다. "실험 1"을 누르면 RTX 5070에서 VRAM 부족(OOM)이 일어나 5번 칸부터 멈춥니다.</figcaption></figure>
+  </div>
+  <div class="exp">
+    <div><b>VRAM 부족 (OOM)</b>12GB 카드에 14B 모델, 오프로딩 끔</div>
+    <div><b>데드락</b>요청 2개를 "동시에 나눠 잡기"로</div>
+    <div><b>열 제한</b>83°C를 넘으면 클럭 −15%</div>
+    <div><b>봇 응답 시간 초과</b>60초 안에 못 끝내면 끊김</div>
+    <div><b>처방</b>FlashAttention·FP8·적은 단계·큰 VRAM</div>
+    <div><b>도전 모드</b>성공하면 "어쭈!" 360p → 4K</div>
+  </div>
+  <p><a class="go" href="https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/gpu_dance_simulator.html" target="_blank" rel="noopener">시뮬레이터 열기 →</a> <span class="tiny" style="color:var(--muted);margin-left:8px">숫자는 사양표와 공식으로 만든 어림값입니다.</span></p>
 </div>
 </section>
 
@@ -483,6 +524,36 @@ footer .tb{font-size:13.5px}
       <div class="card"><h4>왜 단계마다 두 바퀴인가</h4><p>같은 반죽을 두 번 라인에 올립니다. ① 주문서 없이 → "그냥 그럴듯한 그림" 쪽으로 다듬은 결과 ② 주문서 들고 → "웃는 로봇" 쪽으로 다듬은 결과. 둘의 <b>차이가 주문서의 효과</b>이고, 이 차이를 가이던스 배(보통 4 안팎)만큼 키워 적용하면 프롬프트를 확실히 따릅니다. 그래서 50단계 = 순전파 100번.</p></div>
     </div>
   </div>
+  <section class="panel" id="learnEasy" aria-label="디노이저 학습과 손실을 아주 쉽게">
+    <h3>디노이저는 어떻게 배우나 — 아주 쉽게</h3>
+    <p class="easy">한 줄 요약: 모델은 섞인 잡음을 칸마다 맞힙니다. 틀린 만큼이 손실(벌점)이고, 학습할수록 줄어요. 이것을 네 걸음으로 풀어 봅니다.</p>
+    <div class="grid2">
+      <div class="card"><h4>① 학습은 "정답을 아는 퀴즈"</h4>
+        <ol class="lq"><li><b>출제</b>: 진짜 그림을 한 장 꺼냅니다.</li><li><b>잡음 섞기</b>: 컴퓨터가 잡음을 뽑아 섞습니다. 내가 섞었으니 <b>정답(섞은 잡음)</b>을 압니다.</li><li><b>풀이</b>: 모델이 섞인 그림만 보고 칸마다 잡음이 얼마인지 숫자로 맞힙니다.</li><li><b>채점</b>: 칸마다 (예측 − 정답)²의 평균 = <b>손실</b>.</li><li><b>고치기</b>: 손실이 줄어드는 쪽으로 다이얼(가중치)을 조금 돌리고 다음 문제로.</li></ol>
+        <p class="easy" style="margin:0">비유: 선생님이 사진에 직접 낙서를 하고 "어디에 얼마나 낙서했게?"라고 묻는 퀴즈. 낙서한 사람이 선생님이니 채점이 됩니다. 그림만 있으면 문제와 정답지가 <b>자동으로</b> 생겨요.</p></div>
+      <div class="card"><h4>② 채점을 손으로: 칸 4개</h4>
+        <div class="lmtab" id="lmTab"></div>
+        <div class="lmsl">
+          <label>1번 예측 <input type="range" id="lm0" min="-1.5" max="1.5" step="0.1" value="0.2"></label><label>2번 예측 <input type="range" id="lm1" min="-1.5" max="1.5" step="0.1" value="0.1"></label>
+          <label>3번 예측 <input type="range" id="lm2" min="-1.5" max="1.5" step="0.1" value="0.2"></label><label>4번 예측 <input type="range" id="lm3" min="-1.5" max="1.5" step="0.1" value="-0.3"></label></div>
+        <div class="ctrl" style="margin-top:6px"><button class="bt" id="lmBad">엉터리 (합은 0)</button><button class="bt" id="lmGood">다 맞힘</button></div>
+        <p id="lmOut" class="lmout"></p>
+        <p class="easy" style="margin:0"><b>왜 제곱?</b> 그냥 더하면 +와 −가 서로 지워져 다 틀려도 0이 될 수 있고, 제곱하면 크게 빗나간 칸을 훨씬 크게 벌줍니다(0.1 → 0.01, 0.5 → 0.25).</p></div>
+      <div class="card"><h4>③ 고르기(분류) vs 맞히기(회귀)</h4>
+        <p style="margin:.2em 0"><b style="color:var(--info)">LLM = 객관식.</b> "오늘 하늘이 ___"에서 다음 단어를 단어장(수만 개) 중에 <b>고릅니다</b>. 벌점 = −log(정답에 준 확률).</p>
+        <div class="ctrl"><div class="group"><span class="glabel">정답에 준 확률</span><input type="range" id="lpP" min="1" max="99" value="50" aria-label="정답 단어에 준 확률"><span class="val" id="lpPV"></span></div></div>
+        <p style="margin:.6em 0 .2em"><b style="color:var(--amber)">디노이저 = 몸무게 맞히기.</b> 칸에 섞인 잡음(정답 +0.6)을 숫자로 <b>맞힙니다</b>. 잡음 값은 끝없이 많은 숫자라 보기를 만들 수 없어요. 벌점 = (예측 − 정답)².</p>
+        <div class="ctrl"><div class="group"><span class="glabel">잡음 예측</span><input type="range" id="lpG" min="-1.5" max="1.5" step="0.1" value="0" aria-label="잡음 예측값"><span class="val" id="lpGV"></span></div></div>
+        <p class="easy" style="margin:0">참고: 옛 PixelCNN은 픽셀 색을 256가지 중에서 고르는 객관식(분류)으로 풀었습니다.</p></div>
+      <div class="card"><h4>④ 학습 = 다이얼 돌려 벌점 줄이기</h4>
+        <svg id="ldSvg" viewBox="0 0 320 170" role="img" aria-label="다이얼 값에 따른 벌점 골짜기와 걸어 내려가는 공" style="width:100%;height:auto;display:block"></svg>
+        <div class="ctrl"><button class="bt" id="ldStep">한 걸음</button><button class="bt" id="ldAuto">▶ 자동</button><button class="bt" id="ldReset">처음부터</button>
+          <div class="group"><span class="glabel">보폭</span><select id="ldLr" class="bt"><option value="0.05">작게</option><option value="0.3" selected>알맞게</option><option value="1.05">너무 크게</option></select></div></div>
+        <p id="ldOut" class="easy" style="margin:.3em 0 0"></p>
+        <p class="easy" style="margin:0">비유: 안개 낀 산에서 <b>발밑 기울기</b>만 보고 내려가기(경사 하강). 실제 모델은 다이얼이 13억~140억 개(Wan 2.1 1.3B·14B)이고, 문제 한 묶음마다 모두를 한꺼번에 조금씩 돌립니다.</p></div>
+    </div>
+  </section>
+
   <section class="panel" aria-label="잠재 공간과 가이던스 실험">
     <h3>가이던스 실험 — 두 결과를 어떻게 섞나</h3>
     <div class="cwrap"><canvas id="c1b" class="wide" aria-label="프롬프트 없는 결과, 프롬프트 있는 결과, 가이던스로 섞은 결과 세 그림"></canvas></div>
@@ -1615,6 +1686,29 @@ function buildPackage(sc){var g=scopeGraph(sc),LD=JSON.parse($('#kg-ld').textCon
 Cast.fill();Gloss.apply();drawAll();
 window.addEventListener('resize',function(){drawAll()});
 requestAnimationFrame(loop);
+
+/* 디노이저 학습, 아주 쉽게 */
+(function(){var $=function(s){return document.querySelector(s)};if(!$('#learnEasy'))return;
+  var G=[.6,-.4,.2,-.8];function f(v){return (v>0?'+':'')+v.toFixed(1)}
+  function mse(){var P=[0,1,2,3].map(function(i){return +$('#lm'+i).value}),d=P.map(function(p,i){return p-G[i]}),s=d.map(function(v){return v*v}),L=s.reduce(function(a,b){return a+b},0)/4,S=d.reduce(function(a,b){return a+b},0);
+    var row=function(h,a,c){return '<span class="h">'+h+'</span>'+a.map(function(v){return '<span class="'+c+'">'+v+'</span>'}).join('')};
+    $('#lmTab').innerHTML=row('정답(섞은 잡음)',G.map(f),'g')+row('모델 예측',P.map(f),'p')+row('차이',d.map(f),'')+row('차이²(벌점)',s.map(function(v){return v.toFixed(2)}),'s');
+    $('#lmOut').innerHTML='손실 = ('+s.map(function(v){return v.toFixed(2)}).join(' + ')+') ÷ 4 = '+L.toFixed(3)+'<br><span style="color:var(--muted);font-weight:400">제곱 없이 그냥 더하면 '+f(S)+(Math.abs(S)<.05&&L>.05?' — 다 틀렸는데 0!':'')+'</span>'}
+  [0,1,2,3].forEach(function(i){$('#lm'+i).addEventListener('input',mse)});
+  function setP(a){a.forEach(function(v,i){$('#lm'+i).value=v});mse()}
+  $('#lmBad').onclick=function(){setP([1.3,-1.1,.9,-1.5])};$('#lmGood').onclick=function(){setP(G)};mse();
+  function pg(){var p=+$('#lpP').value/100,g=+$('#lpG').value;$('#lpPV').textContent=Math.round(p*100)+'% → 벌점 '+(-Math.log(p)).toFixed(2);$('#lpGV').textContent=f(g)+' → 벌점 '+((g-.6)*(g-.6)).toFixed(2)}
+  $('#lpP').addEventListener('input',pg);$('#lpG').addEventListener('input',pg);pg();
+  var WS=.6,w=-1.2,lr=.3,steps=0,timer=null,NS='http://www.w3.org/2000/svg';function L(v){return (v-WS)*(v-WS)+.05}
+  function sx(v){return 20+(v+1.6)/3.4*280}function sy(l){return 150-Math.min(1,l/5.2)*130}
+  function draw(){var s=$('#ldSvg'),d='';for(var i=0;i<=80;i++){var v=-1.6+3.4*i/80;d+=(i?'L':'M')+sx(v).toFixed(1)+','+sy(L(v)).toFixed(1)}
+    s.innerHTML='<rect x="20" y="16" width="280" height="138" fill="none" stroke="var(--rule)"/><path d="'+d+'" fill="none" stroke="var(--eye)" stroke-width="2.4"/><circle cx="'+sx(WS)+'" cy="'+sy(L(WS))+'" r="3.5" fill="var(--gfp)"/><text x="'+sx(WS)+'" y="168" fill="var(--gfp)" font-size="11" text-anchor="middle">가장 낮은 곳</text><circle cx="'+sx(clamp2(w))+'" cy="'+sy(L(clamp2(w)))+'" r="7" fill="var(--info)"/><text x="24" y="12" fill="var(--muted)" font-size="11">벌점 ↑ · 다이얼 값 →</text>';
+    $('#ldOut').innerHTML=steps+'걸음 · 지금 벌점 <b>'+L(w).toFixed(3)+'</b> — '+(lr<.1?'보폭이 작으면 안전하지만 느려요.':lr>1?'보폭이 너무 크면 골짜기를 건너뛰어 벌점이 커져요(발산).':'알맞은 보폭이면 몇 걸음 만에 바닥에 닿아요.')}
+  function clamp2(v){return Math.max(-1.6,Math.min(1.8,v))}
+  function step(){w=Math.max(-3,Math.min(3,w-lr*2*(w-WS)));steps++;draw()}
+  function reset(){w=-1.2;steps=0;draw()}
+  $('#ldStep').onclick=step;$('#ldReset').onclick=reset;$('#ldLr').onchange=function(){lr=+this.value;reset()};
+  $('#ldAuto').onclick=function(){if(timer){clearInterval(timer);timer=null;this.textContent='▶ 자동';return}var b=this;b.textContent='⏸ 멈춤';timer=setInterval(function(){step();if(steps>=30){clearInterval(timer);timer=null;b.textContent='▶ 자동'}},500)};draw()})();
 
 </script>
 <script>(function(){var c=document.getElementById('cover');if(!c)return;var im=new Image();im.onload=function(){im.className='cv';im.alt='재료 바구니가 좁은 통로에 밀려 있는 밤의 연구실 주방에서 네 캐릭터가 벽의 꺾인 선 그래프를 바라보는 표지';var f=c.querySelector('.fallback');if(f)f.style.display='none';c.style.aspectRatio='auto';c.style.width='100%';c.style.height='min(48vh,56.25vw)';c.insertBefore(im,c.firstChild);};im.src='images/cover_03.webp';})();</script>
