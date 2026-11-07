@@ -566,6 +566,13 @@ footer .tb{font-size:13.5px}
       <div class="group"><span class="glabel">한 프레임의 오차</span><input type="range" id="p2E" min="1" max="10" value="4" aria-label="프레임당 오차 크기"><span class="val" id="p2EV">4</span></div>
     </div>
     <section class="kpis in" id="k2"></section>
+  <div class="walk easy"><b>쉽게 다시 보기 — 위 그래프는 손실함수가 아니에요</b>
+    <div class="grid2" style="margin-top:8px">
+      <div class="card"><h4>① 학습용 손실 (학습하는 동안)</h4><p>가로축은 학습 반복. 칸마다 (예측한 잡음 − 내가 섞은 잡음)²을 평균한 값으로, 모델을 고치는 데 씁니다. 학습이 끝나도 아주 작은 오차는 남습니다.</p></div>
+      <div class="card"><h4>② 결과를 잰 거리 (만든 뒤에)</h4><p>가로축은 영상 프레임. 공이 원래 가야 할 길에서 몇 픽셀 벗어났는지 잰 값으로, 결과 품질을 평가하는 데 씁니다. 위 실험의 그래프가 이쪽이에요.</p></div>
+      <div class="card"><h4>둘은 어떻게 이어지나</h4><p>한 프레임마다 남는 오차가 작아도(①이 낮아도), 한 프레임씩 이어 만들면 그 작은 오차가 쌓여 30프레임 뒤에는 크게 벗어납니다(②가 커짐). 손실이 작은 것과 결과가 좋은 것은 다른 이야기라서, 요즘 영상 모델은 영상 전체를 함께 다듬습니다.</p></div>
+    </div>
+  </div>
     <div class="eq" id="eq2"></div>
     <div class="insight" id="ins2" aria-live="polite"></div>
   </section>
