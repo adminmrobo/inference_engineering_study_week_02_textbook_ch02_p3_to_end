@@ -72,6 +72,11 @@ nav.top .links a:hover{color:var(--text);background:var(--panel2)}
 .cover .fallback img.fl{height:clamp(40px,12vw,100px)}
 .cover .fallback img.rb{height:clamp(52px,16vw,140px)}
 .cover-chip{position:absolute;left:max(16px,env(safe-area-inset-left,0px));bottom:14px;padding:4px 10px;border-radius:999px;background:rgba(19,20,31,.78);color:var(--text);font-size:13px;border:1px solid var(--rule)}
+/* 받은 그림 자리: 그림이 있을 때만 보임 */
+figure.figcut{margin:16px 0;border-radius:12px;overflow:hidden;border:1px solid var(--rule);background:#0d0e17}
+figure.figcut[hidden]{display:none}
+figure.figcut img{display:block;width:100%;height:auto}
+figure.figcut figcaption{font-size:13.5px;color:var(--muted);padding:8px 14px;line-height:1.5}
 /* hero */
 header.hero{position:relative;overflow:hidden;padding-block:44px 34px;border-bottom:1px solid var(--rule)}
 header.hero::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
@@ -583,6 +588,7 @@ footer .tb{font-size:13.5px}
     <div><div class="tag fly">일상으로 치면</div><p>①에서 본 "바구니 하나당 칼질 수"를 가로축에, 주방이 실제로 내는 요리 속도를 세로축에 놓으면 지붕 모양 그래프가 나옵니다. 칼질 수가 적으면 통로가 속도를 정하고(비스듬한 지붕), 많으면 요리사 손이 속도를 정합니다(평평한 지붕).</p></div>
     <div><div class="tag nn">모델에서는</div><p>GPU의 두 자원은 초당 부동소수점 연산 수(계산)와 초당 옮기는 바이트 수(메모리 대역폭)입니다 <sup>[5]</sup>. 둘의 비가 그 GPU의 ops:byte 비율이고, 알고리즘이 한 바이트당 하는 연산 수가 산술 강도입니다. 산술 강도가 ops:byte 비율보다 낮으면 메모리 병목, 높으면 계산 병목입니다 <sup>[5]</sup>.</p></div>
   </div>
+  <figure class="figcut" data-src="images/cut_03_lv6.webp" hidden><img alt="재료 바구니가 띄엄띄엄 들어와 주판봇 요리사가 기다리고 초파리 연구원이 간격을 재는 장면" width="960" height="540" loading="lazy"><figcaption>재료가 띄엄띄엄 오면 요리사는 기다립니다. 이게 메모리 병목이에요 — 손(계산)이 아니라 통로(대역폭)가 속도를 정합니다.</figcaption></figure>
   <section class="panel" aria-label="루프라인 실험">
     <h3>루프라인 실험 — 작업을 골라 점을 찍어 보세요</h3>
     <div class="cwrap"><canvas id="c3" class="wide" aria-label="가로축 산술 강도, 세로축 성능의 로그 루프라인 그래프와 작업 점들"></canvas></div>
@@ -820,6 +826,7 @@ footer .tb{font-size:13.5px}
 <section class="level" id="outro">
 <div class="wrap">
   <h2>아웃트로</h2>
+  <figure class="figcut" data-src="images/sc_03_outro.webp" hidden><img alt="주판봇이 주판을 들어 기뻐하고 초파리 연구원이 커피를 들고 인정하는 밤의 연구실 주방" width="1200" height="800" loading="lazy"><figcaption>그림 주방은 손이 병목 — 대결은 주판봇의 승리. 박사는 벽 그래프의 평평한 부분(계산 병목)을 가리킵니다.</figcaption></figure>
   <div class="dialog" id="outroDialog">
     <div class="say" data-who="doc"><img class="who" data-who="doc" data-mood="front" alt="" aria-hidden="true"><div><b class="name">박사</b><p>오늘의 세 줄이에요. 첫째, 이미지는 잠재 공간을 수십 번 고친다. 둘째, 병목은 루프라인으로 잰다. 셋째, 어텐션은 동선을 줄이거나 레시피를 바꿔 다룬다.</p></div></div>
     <div class="say" data-who="robo"><img class="who" data-who="robo" data-mood="happy" alt="" aria-hidden="true"><div><b class="name">주판봇</b><p>그림 주방은 손이 병목이었지. 숫자가 말해 줬잖아.</p></div></div>
@@ -1548,6 +1555,12 @@ function buildPackage(sc){var g=scopeGraph(sc),LD=JSON.parse($('#kg-ld').textCon
   $('#fileBtns').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;var f=buildPackage(sc).filter(function(x){return x.name===b.dataset.f})[0];saveFile(new Blob([f.text],{type:'text/plain;charset=utf-8'}),f.name,b,f.text)});
   $('#copyBib').addEventListener('click',function(){copy(REF.map(toBib).join('\n\n'),this)});
   $('#verInfo').textContent='꾸러미 v'+META.version+' · 만든 날 '+META.date+' · 등록부: '+KG.registry;
+})();
+
+/* ===== 받은 그림: 파일이 있을 때만 보이기 ===== */
+(function(){
+  $$('figure.figcut[data-src]').forEach(function(f){var im=f.querySelector('img');var t=new Image();t.onload=function(){im.src=t.src;f.hidden=false};t.src=f.dataset.src});
+  var h=document.querySelector('header.hero');if(h){var b=new Image();b.onload=function(){h.style.backgroundImage='linear-gradient(90deg,rgba(19,20,31,.97) 0%,rgba(19,20,31,.9) 55%,rgba(19,20,31,.74) 100%),url('+b.src+')';h.style.backgroundSize='cover';h.style.backgroundPosition='center 35%'};b.src='images/bg_03.webp'}
 })();
 
 /* ===== 시작 ===== */
