@@ -12,6 +12,15 @@
 
 ---
 
+## 이번 주 자료 모음
+
+| 자료 | 무엇 | 열기 |
+|---|---|---|
+| 읽기용 해설 | 아홉 걸음 인터랙티브 해설 (블로그) | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end/ |
+| 본 발표 슬라이드 | 본편 42장 + 부록 17장, 공장 비유·GPU 10종 대시보드 | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/ |
+| 쉬운 가이드 | 도입 12장 + 핵심만 쉽게 13장(흰 배경, 초보자용) | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/easy_guide.html |
+| "캐릭터 춤춰" GPU 시뮬레이터 | 춤 영상이 만들어지는 동안 GPU의 열·전력·시간·데드락·병목을 직접 일으켜 보는 4쪽 시뮬레이터, 연구실 캐릭터 튜토리얼 13단계 | https://adminmrobo.github.io/inference_engineering_study_week_02_textbook_ch02_p3_to_end_slide/gpu_dance_simulator.html |
+
 ## 이 페이지는
 
 AI가 느릴 때 무엇을 고쳐야 하는지 아홉 단계로 나누어 설명합니다. GPU를 식당 주방에 비유해 계산 성능(요리사의 손)과 메모리 대역폭(재료 통로)이라는 두 자원을 먼저 익힙니다. 이어서 그림·영상 생성 AI가 일하는 방식을 보고, 어디가 막혔는지 재는 루프라인 그래프를 배웁니다. 마지막으로 가장 비싼 계산인 어텐션을 줄이는 방법을 정리합니다. 수식을 몰라도 슬라이더만 움직이면 따라올 수 있습니다.
